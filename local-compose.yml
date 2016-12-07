@@ -1,0 +1,20 @@
+influxdb:
+    extends:
+      file: docker-compose.yml
+      service: influxdb
+    mem_limit: 512m
+    environment:
+      - CONSUL_AGENT=1
+      - CONSUL=consul
+      - LOG_LEVEL=DEBUG
+    links:
+      - consul:consul
+    ports:
+      - "8083"
+      - "8086"
+consul:
+    extends:
+      file: docker-compose.yml
+      service: consul
+    ports:
+      - "8500:8500"
