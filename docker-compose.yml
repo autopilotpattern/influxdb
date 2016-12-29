@@ -11,11 +11,10 @@ influxdb:
       - consul:consul
     environment:
       - INFLUXDB_ADMIN_ENABLED=true
-      - CONTAINERPILOT=file:///etc/containerpilot.json
       - LOG_LEVEL=debug
       - CONSUL=consul
 consul:
-    image: d0cker/consul:0.7.2
+    image: autopilotpattern/consul
     command: >
       /usr/local/bin/containerpilot
       /bin/consul agent -server
