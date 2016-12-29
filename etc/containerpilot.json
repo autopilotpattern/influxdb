@@ -1,5 +1,5 @@
 {
-  "consul": "{{ if .CONSUL_AGENT }}localhost{{ else }}{{ .CONSUL }}{{ end }}:8500",
+  "consul": "{{ .CONSUL }}:8500",
   "logging": {
     "level": "{{ if .LOG_LEVEL }}{{ .LOG_LEVEL }}{{ else }}INFO{{ end }}"
   },
@@ -11,18 +11,5 @@
       "poll": 5,
       "ttl": 25
     }
-  ],
-  "coprocesses": [{{ if .CONSUL_AGENT }}
-    {
-      "name": "consul-agent (host:{{ .CONSUL }})",
-      "command": ["/usr/local/bin/consul", "agent",
-                  "-data-dir=/data",
-                  "-config-dir=/config",
-                  "-rejoin",
-                  "-retry-join", "{{ .CONSUL }}",
-                  "-retry-max", "10",
-                  "-retry-interval", "10s"],
-      "restarts": "unlimited"
-    }{{ end }}
   ]
 }
