@@ -1,16 +1,15 @@
 version: '2.1'
 services:
     influxdb:
-        image: autopilotpattern/influxdb:latest
-        mem_limit: 4g
+        build: ./
         restart: always
         ports:
           - "8083:8083"
           - "8086:8086"
-        labels:
-          - triton.cns.services=influxdb
-        env_file: _env
-        network_mode: bridge
+        environment:
+          - CONSUL=consul
+          - INFLUXDB_ADMIN_ENABLED=true
+          - LOG_LEVEL=debug
 
     consul:
         image: autopilotpattern/consul:0.7.2-r0.8
@@ -18,19 +17,9 @@ services:
           /usr/local/bin/containerpilot
           /bin/consul agent -server
             -bootstrap
-            -bootstrap-expect 3
             -config-dir=/etc/consul
             -ui-dir /ui
+            -client=0.0.0.0
         restart: always
-        mem_limit: 128m
         ports:
           - "8500:8500"
-        expose:
-          - "53"
-          - "8300-8302"
-          - "8400"
-        dns:
-          - 127.0.0.1
-        labels:
-          - triton.cns.services=consul
-        network_mode: bridge
