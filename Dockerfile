@@ -1,4 +1,4 @@
-FROM influxdb:1.1.1-alpine
+FROM influxdb:1.2.2-alpine
 
 RUN apk update && \
     apk add curl && \
