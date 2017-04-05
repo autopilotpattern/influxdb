@@ -1,5 +1,5 @@
 {
-  "consul": "{{ .CONSUL }}:8500",
+  "consul": "localhost:8500",
   "logging": {
     "level": "{{ if .LOG_LEVEL }}{{ .LOG_LEVEL }}{{ else }}INFO{{ end }}"
   },
@@ -10,6 +10,18 @@
       "health": "/usr/local/bin/health.sh",
       "poll": 5,
       "ttl": 25
+    }
+  ],
+  "coprocesses": [
+    {
+      "command": ["/usr/local/bin/consul", "agent",
+                  "-data-dir=/opt/consul/data",
+                  "-config-dir=/opt/consul/config",
+                  "-rejoin",
+                  "-retry-join", "{{ if .CONSUL }}{{ .CONSUL }}{{ else }}consul{{ end }}",
+                  "-retry-max", "10",
+                  "-retry-interval", "10s"],
+      "restarts": "unlimited"
     }
   ]
 }
