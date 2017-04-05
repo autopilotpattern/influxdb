@@ -79,6 +79,7 @@ envcheck() {
         set +o pipefail
 
         echo '# Consul discovery via Triton CNS' >> _env
+        echo CONSUL_AGENT=1 >> _env
         echo CONSUL=consul.svc.${TRITON_ACCOUNT}.${TRITON_DC}.cns.joyent.com >> _env
         echo >> _env
 
