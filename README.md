@@ -10,4 +10,12 @@ Builds from the latest [alpine image for InfluxDB](https://hub.docker.com/_/infl
 
 ## Usage
 
-docker run -e "LOG_LEVEL=debug" -e "CONSUL=https://consulhost" -e "INFLUXDB_ADMIN_ENABLED=true" -p "8083:8083" -p "8086:8086" autopilotpattern/influxdb
+```
+docker run -e "LOG_LEVEL=debug" -e "CONSUL_AGENT=1" -e "CONSUL=https://consulhost" -e "INFLUXDB_ADMIN_ENABLED=true" -p "8083:8083" -p "8086:8086" autopilotpattern/influxdb
+```
+
+### Environment Variables
+
+- _CONSUL_AGENT_ - enables usage of a container-local consul agent.
+- _CONSUL_  - hostname for consul server
+- _LOG_LEVEL_ - specify the ContainerPilot log level, defaults to 'info'
