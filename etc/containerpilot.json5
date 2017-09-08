@@ -1,0 +1,42 @@
+{
+  consul: '{{ if .CONSUL_AGENT }}localhost{{ else }}{{ .CONSUL | default "consul" }}{{ end }}:8500',
+  jobs: [
+    {
+      name: 'influxdb',
+      port: 8086,
+      exec: 'influxd',
+      health: {
+        exec: '/usr/local/bin/health.sh',
+        interval: 10,
+        ttl: 25
+      },
+      restarts: 'unlimited'{{ if .CONSUL_AGENT }},
+      when: {
+        source: 'consul-agent',
+        once: 'healthy'
+      }{{ end }}
+    },{{ if .CONSUL_AGENT }}
+    {
+      name: 'consul-agent',
+      exec: ['/usr/local/bin/consul', 'agent',
+                  '-data-dir=/data',
+                  '-config-dir=/config',
+                  '-log-level=err',
+                  '-rejoin',
+                  '-retry-join', '{{ .CONSUL | default "consul" }}',
+                  '-retry-max', '10',
+                  '-retry-interval', '10s'],
+      health: {
+        exec: 'curl -so /dev/null http://localhost:8500',
+        interval: 10,
+        ttl: 25
+      },
+      restarts: 'unlimited'
+    }
+    {{ end }}
+  ],
+  telemetry: {
+    port: 9090,
+    interfaces: ['eth1', 'eth0', 'eth0[1]', 'lo', 'lo0', 'inet']
+  }
+}
